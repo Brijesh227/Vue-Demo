@@ -1,4 +1,5 @@
 export const RouterName = {
     Signup : "SignUp",
-    Login: "LogIn"
+    Login: "LogIn",
+    DashBoard: "DashBoard"
 }

@@ -1,46 +1,88 @@
 <template>
-  <div class="hello">
-    <div class="card register">
-       <h1>Sign Up</h1>
-       <form>
-          <input 
-            v-model="emailReg" 
-            type="email" 
-            class="form-control" 
-            placeholder="Email" 
+  <v-container fluid fill-height>
+    <v-layout align-center justify-center>
+      <v-card class="elevation-12">
+         <v-toolbar dark color="primary">
+          <v-toolbar-title>Login form</v-toolbar-title>
+         </v-toolbar>
+         <v-card-text>
+         <form ref="form" @submit.prevent="goToLogin()">
+          <v-text-field
+            v-model="firstname"
+            label="Firstname"
+            type="text"
             required
-          >
-          <input 
-            v-model="passwordReg" 
+          ></v-text-field>
+          
+          <v-text-field
+            v-model="lastname"
+            label="Lastname"
+            type="text"
+            required
+          ></v-text-field>
+
+          <v-text-field
+            v-model="email"
+            label="Email"
+            :rules="emailRules"
+            required
+          ></v-text-field>
+
+          <v-text-field
+            v-model="password"
+            label="Password"
             type="password"
-            class="form-control" 
-            placeholder="Password" 
+            placeholder="password"
             required
-          >
-          <input 
-            type="submit" 
-            class="btn btn-primary" 
-            @click="doRegister"
-          >
-          <p>Already have an account? <a href="#" @click="registerActive = !registerActive, emptyFields = false">Sign in here</a>
-          </p>
-       </form>
-    </div>
-  </div>
+          ></v-text-field>
+          <v-btn type="submit" class="mt-4" color="primary" value="log in">Login</v-btn>
+          </form>
+          <p>Already have an account? <a href="#" @click=goToLogin>Sign in here</a></p>
+         </v-card-text>
+      </v-card>
+    </v-layout>
+    </v-container>
 </template>
 
 <script>
-export default {
-  name: 'SignUp',
-  props: {
-    msg: String
-  }
-}
-</script>
+import { RouterName } from "../utility/constant";
+import axios from "axios";
+import { createUser } from "../../API/GraphQL/mutation.js";
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-  .input-bottom {
-    margin-bottom: 20px;
+  export default {
+    name: 'Sign-Up',
+    data() {
+    return {
+      firstname: undefined,
+      lastname: undefined,
+      email: undefined,
+      password: undefined,
+      emailRules: [
+        v => !!v || 'E-mail is required',
+        v => /.+@.+\..+/.test(v) || 'E-mail must be valid',
+        ],
+    }
+    },
+    methods: {
+      goToLogin() {
+        axios({
+          url: 'http://localhost:3000/graphql',
+          method: 'post',
+          data: {
+            query: createUser,
+            variables: {input: {
+              firstName : this.firstname,
+              lastName:  this.lastname,
+              email: this.email,
+              password: this.password 
+            }}
+          },
+          mode: 'no-cors',
+      }).then(async (result) => {
+        console.log("lol res",result.data)
+        this.$router.push({name: RouterName.Login})
+      });
+      }
+    }
   }
-</style>
+</script>

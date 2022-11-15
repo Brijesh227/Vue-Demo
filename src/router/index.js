@@ -12,9 +12,14 @@ const routes = [
     component: SignUp
   },
   {
-    path: '/logIN',
+    path: '/login',
     name: RouterName.Login,
     component: () => import('../components/LogIn')
+  },
+  {
+    path: '/Dashboard',
+    name: RouterName.DashBoard,
+    component: () => import('../components/DashBoard')
   }
 ]
 

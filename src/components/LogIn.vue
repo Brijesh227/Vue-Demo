@@ -1,27 +1,59 @@
 <template>
-    <div v-if="!registerActive" class="card login" v-bind:class="{ error: emptyFields }">
-        <h1>Sign In</h1>
-        <form class="form-group">
-           <input v-model="emailLogin" type="email" class="form-control" placeholder="Email" required>
-           <input v-model="passwordLogin" type="password" class="form-control" placeholder="Password" required>
-           <input type="submit" class="btn btn-primary" @click="doLogin">
-           <p>Don't have an account? <a href="#" @click="registerActive = !registerActive, emptyFields = false">Sign up here</a>
-           </p>
-           <p><a href="#">Forgot your password?</a></p>
-        </form>
-    </div>
-  </template>
+    <v-container fluid fill-height>
+    <v-layout align-center justify-center>
+      <v-card class="elevation-12">
+         <v-toolbar dark color="primary">
+          <v-toolbar-title>Login form</v-toolbar-title>
+         </v-toolbar>
+         <v-card-text>
+         <form ref="form" @submit.prevent="login()">
+
+          <v-text-field
+            v-model="email"
+            label="Email"
+            :rules="emailRules"
+            required
+          ></v-text-field>
+
+          <v-text-field
+            v-model="password"
+            name="password"
+            label="Password"
+            type="password"
+            placeholder="password"
+            required
+          ></v-text-field>
+          <v-btn type="submit" class="mt-4" color="primary" value="log in">Login</v-btn>
+          </form>
+         </v-card-text>
+      </v-card>
+    </v-layout>
+    </v-container>
+</template>
   
   <script>
-  export default {
-    name: 'Log-in',
-    props: {
-      msg: String
-    }
-  }
+  import { RouterName } from "../utility/constant";
+ export default {
+  name: "LogIn",
+  data() {
+    return {
+      email: undefined,
+      password: undefined,
+      emailRules: [
+        v => !!v || 'E-mail is required',
+        v => /.+@.+\..+/.test(v) || 'E-mail must be valid',
+        ],
+    };
+  },
+  methods: {
+    login() {
+      localStorage.setItem("isLoggedIn",true);
+      this.$router.push({name: RouterName.DashBoard})
+    },
+  },
+};
   </script>
   
-  <!-- Add "scoped" attribute to limit CSS to this component only -->
   <style scoped>
   
   </style>
