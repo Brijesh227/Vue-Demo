@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import SignUp from '../components/SignUp';
 import { RouterName } from "../utility/constant"
 
 Vue.use(VueRouter)
@@ -9,7 +8,7 @@ const routes = [
   {
     path: '/',
     name: RouterName.Signup,
-    component: SignUp
+    component: () => import('../components/LogIn')
   },
   {
     path: '/login',
@@ -17,7 +16,7 @@ const routes = [
     component: () => import('../components/LogIn')
   },
   {
-    path: '/Dashboard',
+    path: '/dashboard',
     name: RouterName.DashBoard,
     component: () => import('../components/DashBoard')
   }

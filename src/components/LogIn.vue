@@ -6,7 +6,7 @@
           <v-toolbar-title>Login form</v-toolbar-title>
          </v-toolbar>
          <v-card-text>
-         <form ref="form" @submit.prevent="login()">
+         <form ref="form" @submit.prevent="login">
 
           <v-text-field
             v-model="email"
@@ -31,9 +31,9 @@
     </v-container>
 </template>
   
-  <script>
-  import { RouterName } from "../utility/constant";
- export default {
+<script>
+import { RouterName } from "../utility/constant";
+export default {
   name: "LogIn",
   data() {
     return {
@@ -48,13 +48,9 @@
   methods: {
     login() {
       localStorage.setItem("isLoggedIn",true);
-      this.$router.push({name: RouterName.DashBoard})
+      this.$router.push({name: RouterName.DashBoard});
     },
   },
 };
-  </script>
-  
-  <style scoped>
-  
-  </style>
+</script>
   

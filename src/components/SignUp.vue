@@ -6,16 +6,16 @@
           <v-toolbar-title>Login form</v-toolbar-title>
          </v-toolbar>
          <v-card-text>
-         <form ref="form" @submit.prevent="goToLogin()">
+         <form ref="form" @submit.prevent="signUpUser">
           <v-text-field
-            v-model="firstname"
+            v-model="firstName"
             label="Firstname"
             type="text"
             required
           ></v-text-field>
           
           <v-text-field
-            v-model="lastname"
+            v-model="lastName"
             label="Lastname"
             type="text"
             required
@@ -37,7 +37,7 @@
           ></v-text-field>
           <v-btn type="submit" class="mt-4" color="primary" value="log in">Login</v-btn>
           </form>
-          <p>Already have an account? <a href="#" @click=goToLogin>Sign in here</a></p>
+          <p>Already have an account? <a href="#" @click="goToLoginPage">Sign in here</a></p>
          </v-card-text>
       </v-card>
     </v-layout>
@@ -47,14 +47,13 @@
 <script>
 import { RouterName } from "../utility/constant";
 import axios from "axios";
-import { createUser } from "../../API/GraphQL/mutation.js";
 
-  export default {
-    name: 'Sign-Up',
-    data() {
+export default {
+  name: 'Sign-Up',
+  data() {
     return {
-      firstname: undefined,
-      lastname: undefined,
+      firstName: undefined,
+      lastName: undefined,
       email: undefined,
       password: undefined,
       emailRules: [
@@ -62,27 +61,39 @@ import { createUser } from "../../API/GraphQL/mutation.js";
         v => /.+@.+\..+/.test(v) || 'E-mail must be valid',
         ],
     }
-    },
-    methods: {
-      goToLogin() {
-        axios({
-          url: 'http://localhost:3000/graphql',
-          method: 'post',
-          data: {
-            query: createUser,
-            variables: {input: {
-              firstName : this.firstname,
-              lastName:  this.lastname,
-              email: this.email,
-              password: this.password 
-            }}
-          },
-          mode: 'no-cors',
+  },
+  methods: {
+    signUpUser() {
+      axios({
+        url: 'http://localhost:3000/graphql',
+        method: 'post',
+        data: {
+          query:`mutation {
+                  createUser(input:{
+                    firstName:"${this.firstName}",
+                    lastName:"${this.lastName}",
+                    email:"${this.email}",
+                    password:"${this.password}"
+                  }) {
+                    firstName
+                    lastName
+                    email
+                    password
+                  }
+                }`,
+            },
+        mode: 'no-cors',
       }).then(async (result) => {
-        console.log("lol res",result.data)
-        this.$router.push({name: RouterName.Login})
+        if(result?.data) {
+          this.$router.push({name: RouterName.Login})
+        }
+      }).catch((error)=> {
+        console.log("error",error);
       });
-      }
+    },
+    goToLoginPage() {
+      this.$router.push({name: RouterName.Login});
     }
   }
+}
 </script>
